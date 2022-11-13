@@ -88,13 +88,18 @@ extension ViewController: CLLocationManagerDelegate {
         locationManager.requestWhenInUseAuthorization()
     }
     
-    // 이동 기록을 지도 위에 표시
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         // 현재 위치(경도, 위도) 얻어오기
         guard let location = locations.last else { return }
         let latitude = location.coordinate.latitude
         let longtitude = location.coordinate.longitude
+        
+        // 사용자의 현재 위치에 지도 focus 설정
+        let center = CLLocationCoordinate2D(latitude: latitude,
+                                            longitude: longtitude)
+        let region = MKCoordinateRegion(center: center, span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+        mapView.setRegion(region, animated: true)
         
         // MKOverlayRenderer를 이용하여 지도 위에 이동 기록 표시
         if let previousCoordinate = previousCoordinate {
