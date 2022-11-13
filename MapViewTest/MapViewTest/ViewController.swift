@@ -11,10 +11,12 @@ import MapKit
 
 class ViewController: UIViewController {
     
-    let mapView: MKMapView = {
+    lazy var mapView: MKMapView = {
         let map = MKMapView()
+        map.delegate = self
         return map
     }()
+    var previousCoordinate: CLLocationCoordinate2D?
     
     // locationManger를 선언함과 동시에 CLLocationManager 객체 생성
     lazy var locationManager: CLLocationManager = {
@@ -84,5 +86,48 @@ extension ViewController: CLLocationManagerDelegate {
     
     func getLocationUsagePermission() {
         locationManager.requestWhenInUseAuthorization()
+    }
+    
+    // 이동 기록을 지도 위에 표시
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        // 현재 위치(경도, 위도) 얻어오기
+        guard let location = locations.last else { return }
+        let latitude = location.coordinate.latitude
+        let longtitude = location.coordinate.longitude
+        
+        // MKOverlayRenderer를 이용하여 지도 위에 이동 기록 표시
+        if let previousCoordinate = previousCoordinate {
+            var points: [CLLocationCoordinate2D] = []
+            let point1 = CLLocationCoordinate2D(latitude: previousCoordinate.latitude,
+                                                longitude: previousCoordinate.longitude)
+            let point2 = CLLocationCoordinate2D(latitude: latitude,
+                                                longitude: longtitude)
+            points.append(contentsOf: [point1, point2])
+            
+            let lineDraw = MKPolyline(coordinates: points, count: points.count)
+            mapView.addOverlay(lineDraw)
+        }
+        
+        previousCoordinate = location.coordinate
+    }
+}
+
+extension ViewController: MKMapViewDelegate {
+    
+    /// mapView.addOverlay(lineDraw) 실행 시 호출되는 함수
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        guard let polyLine = overlay as? MKPolyline
+        else {
+            print("polyline을 그릴 수 없음")
+            return MKOverlayRenderer()
+        }
+        
+        let renderer = MKPolylineRenderer(polyline: polyLine)
+        renderer.strokeColor = .red
+        renderer.lineWidth = 5.0
+        renderer.alpha = 1.0
+        
+        return renderer
     }
 }
