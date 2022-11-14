@@ -35,6 +35,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4738D75A2921D336003AE835 /* AchaLibrary */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = AchaLibrary; path = ../../../Boostcamp/Membership/iOS08_Acha/AchaLibrary; sourceTree = "<group>"; };
 		4769CE6429210106005F58C5 /* MapViewTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapViewTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4769CE6729210106005F58C5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4769CE6929210106005F58C5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -74,9 +75,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4738D7592921D336003AE835 /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				4738D75A2921D336003AE835 /* AchaLibrary */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
 		4769CE5B29210106005F58C5 = {
 			isa = PBXGroup;
 			children = (
+				4738D7592921D336003AE835 /* Packages */,
 				4769CE6629210106005F58C5 /* MapViewTest */,
 				4769CE7D29210107005F58C5 /* MapViewTestTests */,
 				4769CE8729210107005F58C5 /* MapViewTestUITests */,

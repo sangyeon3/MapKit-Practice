@@ -18,6 +18,19 @@ class ViewController: UIViewController {
     }()
     var previousCoordinate: CLLocationCoordinate2D?
     
+    lazy var latitudeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "위도"
+        label.textColor = .black
+        return label
+    }()
+    lazy var longtitudeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "경도"
+        label.textColor = .black
+        return label
+    }()
+    
     // locationManger를 선언함과 동시에 CLLocationManager 객체 생성
     lazy var locationManager: CLLocationManager = {
         let manager = CLLocationManager()
@@ -33,6 +46,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        configureUI()
         getLocationUsagePermission()
         setUpMapView()
     }
@@ -43,13 +57,6 @@ class ViewController: UIViewController {
     }
     
     private func setUpMapView() {
-        // layout 설정
-        view.addSubview(mapView)
-        mapView.translatesAutoresizingMaskIntoConstraints = false
-        mapView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 30).isActive = true
-        mapView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 15).isActive = true
-        mapView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -15).isActive = true
-        mapView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -15).isActive = true
         
         // 어플을 종료하고 다시 실행했을 때 MapKit이 발생할 수 있는 오류를 방지하기 위한 처리
         if #available(iOS 16.0, *) {
@@ -62,6 +69,31 @@ class ViewController: UIViewController {
         mapView.showsUserLocation = true
         // 내 위치 기준으로 지도 움직이도록 설정
         mapView.setUserTrackingMode(.follow, animated: true)
+    }
+    
+    private func configureUI() {
+        
+        view.addSubview(latitudeLabel)
+        latitudeLabel.translatesAutoresizingMaskIntoConstraints = false
+        latitudeLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10).isActive = true
+        latitudeLabel.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 15).isActive = true
+        latitudeLabel.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: -15).isActive = true
+        latitudeLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        latitudeLabel.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        
+        view.addSubview(longtitudeLabel)
+        longtitudeLabel.translatesAutoresizingMaskIntoConstraints = false
+        longtitudeLabel.topAnchor.constraint(equalTo: latitudeLabel.bottomAnchor, constant: 5).isActive = true
+        longtitudeLabel.leadingAnchor.constraint(equalTo: latitudeLabel.leadingAnchor).isActive = true
+        longtitudeLabel.trailingAnchor.constraint(equalTo: longtitudeLabel.trailingAnchor).isActive = true
+        longtitudeLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        view.addSubview(mapView)
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        mapView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 100).isActive = true
+        mapView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 15).isActive = true
+        mapView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -15).isActive = true
+        mapView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -15).isActive = true
     }
 }
 
@@ -94,6 +126,9 @@ extension ViewController: CLLocationManagerDelegate {
         guard let location = locations.last else { return }
         let latitude = location.coordinate.latitude
         let longtitude = location.coordinate.longitude
+        
+        latitudeLabel.text = "위도: " + String(latitude)
+        longtitudeLabel.text = "경도: " + String(longtitude)
         
         // 사용자의 현재 위치에 지도 focus 설정
         let center = CLLocationCoordinate2D(latitude: latitude,
